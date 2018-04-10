@@ -1,0 +1,46 @@
+---
+
+- name: validate required variables have been set
+  assert:
+    that:
+      - item | mandatory
+  with_items:
+    - "{{ postgres_s3_backup_s3_host }}"
+    - "{{ postgres_s3_backup_s3_bucket }}"
+    - "{{ postgres_s3_backup_s3_access_key }}"
+    - "{{ postgres_s3_backup_s3_secret_key }}"
+  no_log: True
+
+- name: create required directories
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ postgres_s3_backup_mc_location | dirname }}"
+    - "{{ postgres_s3_backup_configuration_location | dirname }}"
+
+- name: install mc
+  get_url:
+    url: "{{ postgres_s3_backup_mc_download_source }}"
+    dest: "{{ postgres_s3_backup_mc_location }}"
+    checksum: "{{ postgres_s3_backup_mc_download_checksum }}"
+    mode: 0770
+
+- pause:
+    minutes: 60
+
+#- name: create mc configuration file
+#  template:
+#    src: config.json.j2
+#    dest: "{{ postgres_s3_backup_configuration_location }}"
+
+#mc config host add <ALIAS> <YOUR-S3-ENDPOINT> <YOUR-ACCESS-KEY> <YOUR-SECRET-KEY> --api <API-SIGNATURE> --lookup <BUCKET-LOOKUP-TYPE>
+
+
+#
+#- cron:
+#    name: "check dirs"
+#    minute: "0"
+#    hour: "5,2"
+#    job: "ls -alh > /dev/null"
