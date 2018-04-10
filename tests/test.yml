@@ -1,0 +1,5 @@
+---
+
+- hosts: testers
+  roles:
+    - name: postgres-s3-backup

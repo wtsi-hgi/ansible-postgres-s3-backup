@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+BACKUP_LOCATION="{{ postgres_s3_backup_mc_host_alias }}/{{ postgres_s3_backup_s3_bucket }}"
+
+sudo -u {{ postgres_s3_backup_pg_dumpall_user }} pg_dumpall \
+    | gzip \
+    | {{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} pipe "${BACKUP_LOCATION}/test-backup"
