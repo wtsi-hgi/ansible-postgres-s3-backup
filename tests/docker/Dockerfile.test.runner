@@ -13,3 +13,4 @@ ADD . .
 WORKDIR /postgres-s3-backup/tests
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 CMD ["ansible-playbook", "-i", "inventory.ini", "-vvv", "test.yml"]
+#CMD ["ansible-playbook", "-i", "inventory.ini", "test.yml"]

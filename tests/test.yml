@@ -1,5 +1,5 @@
 ---
 
-- hosts: testers
+- hosts: targets
   roles:
-    - name: postgres-s3-backup
+    - name: test-postgres-s3-backup

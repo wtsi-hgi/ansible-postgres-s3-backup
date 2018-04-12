@@ -1,0 +1,23 @@
+---
+
+- name: import postgres-s3-backup role variables
+  include_vars:
+    file: "{{ item }}"
+  with_items:
+    - ../postgres-s3-backup/defaults/main.yml
+    - ../postgres-s3-backup/vars/main.yml
+
+- name: set bucket to name of the host
+  set_fact:
+    postgres_s3_backup_s3_bucket: "{{ inventory_hostname }}"
+
+- name: including backup role
+  include_role:
+    name: postgres-s3-backup
+  vars:
+    postgres_s3_backup_run_once_now: true
+
+- name: TODO
+  become: yes
+  command: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} ls {{ postgres_s3_backup_s3_location }}"
+  register: backup

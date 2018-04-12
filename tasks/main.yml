@@ -11,6 +11,13 @@
     - "{{ postgres_s3_backup_s3_bucket }}"
   no_log: True
 
+- name: validate variable values
+  assert:
+    that:
+      - postgres_s3_backup_s3_directory_in_bucket.startswith("/")
+      - "'/' not in postgres_s3_backup_s3_bucket"
+      - "'://' in postgres_s3_backup_s3_url"
+
 - name: install required system dependencies
   become: yes
   package:
@@ -29,6 +36,14 @@
     - "{{ postgres_s3_backup_mc_location | dirname }}"
     - "{{ postgres_s3_backup_mc_configuration_location | dirname }}"
     - "{{ postgres_s3_backup_script_location | dirname }}"
+
+
+#- name:
+#  pip:
+#    name: bottle
+#    virtualenv: /my_app/venv
+#    virtualenv_site_packages: yes
+
 
 - name: install mc
   become: yes

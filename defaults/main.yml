@@ -6,6 +6,8 @@
 
 ---
 
+postgres_s3_backup_s3_directory_in_bucket: /
+
 # Note: to reduce your pipeline's susceptibility to change/outages of external websites, consider using self-hosted copy
 postgres_s3_backup_mc_download_source: https://dl.minio.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2018-03-25T01-22-22Z
 postgres_s3_backup_mc_download_checksum: sha256:faa61548ef9732cf4f2d51d262aab58aceb2dd6e1391233f8ebd2dfc25979b20
