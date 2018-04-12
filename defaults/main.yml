@@ -17,6 +17,7 @@ postgres_s3_backup_pg_dumpall_user: postgres
 postgres_s3_backup_install_directory: /opt/postgres-s3-backup
 postgres_s3_backup_mc_location: "{{ postgres_s3_backup_install_directory }}/mc"
 postgres_s3_backup_script_location: "{{ postgres_s3_backup_install_directory }}/backup.sh"
+postgres_s3_backup_venv_location: "{{ postgres_s3_backup_install_directory }}/venv"
 
 postgres_s3_backup_mc_configuration_location: /etc/postgres-s3-backup/mc/config.json
 
