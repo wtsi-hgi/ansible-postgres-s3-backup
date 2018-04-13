@@ -17,21 +17,22 @@
   vars:
     postgres_s3_backup_run_once_now: true
 
-- name: TODO
+- name: get backup information
   become: yes
-  command: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} ls {{ postgres_s3_backup_s3_location }}"
+  backup_info:
+    script: "{{ postgres_s3_backup_info_script_location }}"
+    python: "{{ postgres_s3_backup_venv_location }}/bin/python"
+    mc: "{{ postgres_s3_backup_mc_location }}"
+    mc-config: "{{ postgres_s3_backup_mc_configuration_location | dirname }}"
+    mc-s3-location: "{{ postgres_s3_backup_s3_location }}"
+  register: backup_information
+
+- name: read dump backup
+  become: yes
+  shell: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} cat {{ postgres_s3_backup_s3_location }}{{ backup_information.latest }} | gzip -d"
   register: backup
 
-
-
-#- become: yes
-#  backup_info:
-#    script: "{{ postgres_s3_backup_info_script_location }}"
-#    python: "{{ postgres_s3_backup_venv_location }}/bin/python"
-#
-##INFO_SCRIPT_LOCATION_PARAMETER_NAME = "script"
-##CURRENT_BACKUPS_PARAMETER_NAME = "current"
-##MAXIMUM_BACKUPS_PARAMETER_NAME = "max"
-##BACKUP_NAME_SUFFIX_PARAMETER_NAME = "suffix"
-#
-#- fail:
+- name: assert the dump looks valid
+  assert:
+    that:
+      - "'-- PostgreSQL database dump' in backup.stdout_lines"
