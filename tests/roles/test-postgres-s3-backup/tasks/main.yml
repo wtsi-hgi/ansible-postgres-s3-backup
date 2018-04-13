@@ -21,3 +21,17 @@
   become: yes
   command: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} ls {{ postgres_s3_backup_s3_location }}"
   register: backup
+
+
+
+#- become: yes
+#  backup_info:
+#    script: "{{ postgres_s3_backup_info_script_location }}"
+#    python: "{{ postgres_s3_backup_venv_location }}/bin/python"
+#
+##INFO_SCRIPT_LOCATION_PARAMETER_NAME = "script"
+##CURRENT_BACKUPS_PARAMETER_NAME = "current"
+##MAXIMUM_BACKUPS_PARAMETER_NAME = "max"
+##BACKUP_NAME_SUFFIX_PARAMETER_NAME = "suffix"
+#
+#- fail:

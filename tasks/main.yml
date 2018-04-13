@@ -17,6 +17,7 @@
       - postgres_s3_backup_s3_directory_in_bucket.startswith("/")
       - "'/' not in postgres_s3_backup_s3_bucket"
       - "'://' in postgres_s3_backup_s3_url"
+      - "' ' not in postgres_s3_backup_name_suffix"
 
 - name: install required system dependencies
   become: yes
@@ -26,7 +27,8 @@
   with_items:
     - sudo
     - gzip
-    - python-virtualenv
+    - virtualenv
+    - jq
 
 - name: create required directories
   become: yes
@@ -41,8 +43,15 @@
 - name: create pip environment
   become: yes
   pip:
-    requirements: files/scripts/requirements.txt
+    name: "{{ lookup('file', 'files/scripts/requirements.txt').split('\n') }}"
     virtualenv: "{{ postgres_s3_backup_venv_location }}"
+    virtualenv_python: python3
+
+- name: add backup information script
+  become: yes
+  copy:
+    src: files/scripts/backup_info.py
+    dest: "{{ postgres_s3_backup_info_script_location }}"
 
 - name: install mc
   become: yes
