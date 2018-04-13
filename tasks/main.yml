@@ -50,7 +50,7 @@
 - name: add backup information script
   become: yes
   copy:
-    src: files/scripts/backup_info.py
+    src: files/scripts/backup-info.py
     dest: "{{ postgres_s3_backup_info_script_location }}"
 
 - name: install mc

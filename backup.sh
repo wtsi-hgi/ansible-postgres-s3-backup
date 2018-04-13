@@ -2,13 +2,13 @@
 
 set -eu -o pipefail
 
-MC="{{ postgres_s3_backup_mc_location }}"
-MC_CONFIG="{{ postgres_s3_backup_mc_configuration_location | dirname }}"
-PYTHON="{{ postgres_s3_backup_venv_location }}/bin/python"
-BACKUP_INFO_SCRIPT="{{ postgres_s3_backup_info_script_location }}"
-BACKUP_LOCATION="{{ postgres_s3_backup_s3_location }}"
-BACKUPS_TO_KEEP={{ postgres_s3_backup_number_to_keep }}
-BACKUP_SUFFIX="{{ postgres_s3_backup_name_suffix }}"
+MC="/opt/postgres-s3-backup/mc"
+MC_CONFIG="/etc/postgres-s3-backup/mc"
+PYTHON="/opt/postgres-s3-backup/venv/bin/python"
+BACKUP_INFO_SCRIPT="/opt/postgres-s3-backup/backup-info.py"
+BACKUP_LOCATION="backup-server/ansible-postgres-s3-backup-9-5-test-instance/"
+BACKUPS_TO_KEEP=14
+BACKUP_SUFFIX=""
 
 function getBackupInformation()
 {
@@ -17,14 +17,20 @@ function getBackupInformation()
                     --suffix "${BACKUP_SUFFIX}" \
                     --mc "${MC}" \
                     --mc-config "${MC_CONFIG}" \
-                    --mc-s3-location "${BACKUP_LOCATION}")"
+                    --mc-s3-location "${BACKUP_LOCATION}" \
+                )"
 }
+
+echo "$(getBackupInformation)"
+exit
+
 
 # Create new backup
 backupName="$(getBackupInformation | jq -r '.new' )"
 uploadLocation="${BACKUP_LOCATION}${backupName}"
+
 >&2 echo "Uploading backup to: ${uploadLocation}"
-sudo -u {{ postgres_s3_backup_pg_dumpall_user }} pg_dumpall \
+sudo -u postgres pg_dumpall \
     | gzip \
     | "${MC}" -C "${MC_CONFIG}" pipe "${uploadLocation}"
 
