@@ -29,6 +29,7 @@
     - gzip
     - virtualenv
     - jq
+    - python3
 
 - name: create required directories
   become: yes
