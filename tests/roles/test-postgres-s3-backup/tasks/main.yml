@@ -29,7 +29,7 @@
 
 - name: read dump backup
   become: yes
-  shell: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} cat {{ postgres_s3_backup_s3_location }}{{ backup_information.latest }} | gzip -d"
+  shell: "{{ postgres_s3_backup_mc_location }} -C {{ postgres_s3_backup_mc_configuration_location | dirname }} cat {{ postgres_s3_backup_s3_location }}/{{ backup_information.latest }} | gzip -d"
   register: backup
 
 - name: assert the dump looks valid
