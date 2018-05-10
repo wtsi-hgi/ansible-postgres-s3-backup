@@ -12,12 +12,15 @@ BACKUP_SUFFIX="{{ postgres_s3_backup_name_suffix }}"
 
 function getBackupInformation()
 {
-    echo "$("${PYTHON}" "${BACKUP_INFO_SCRIPT}" \
-                    --backups ${BACKUPS_TO_KEEP}  \
-                    --suffix "${BACKUP_SUFFIX}" \
-                    --mc "${MC}" \
-                    --mc-config "${MC_CONFIG}" \
-                    --mc-s3-location "${BACKUP_LOCATION}")"
+    backupInformation="$("${PYTHON}" "${BACKUP_INFO_SCRIPT}" \
+                    --backups=${BACKUPS_TO_KEEP}  \
+                    --suffix="${BACKUP_SUFFIX}" \
+                    --mc="${MC}" \
+                    --mc-config="${MC_CONFIG}" \
+                    --mc-s3-location="${BACKUP_LOCATION}")"
+    returnCode=$?
+    echo "${backupInformation}"
+    return ${returnCode}
 }
 
 # Create new backup
