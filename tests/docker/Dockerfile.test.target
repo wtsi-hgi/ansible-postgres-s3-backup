@@ -8,6 +8,7 @@ RUN apt-get update \
          openssh-server \
          python \
          python-pip \
+         sshpass \
     && rm -rf /var/lib/apt/lists/*
 
 RUN sed -ri "s/^PermitRootLogin\s+.*/PermitRootLogin yes/" /etc/ssh/sshd_config \
@@ -18,5 +19,8 @@ RUN echo "root:${root_password}" | chpasswd
 EXPOSE 22
 
 ADD tests/docker/run-target.sh /run.sh
+
+HEALTHCHECK --start-period=7.5s \
+    CMD sshpass -p root ssh -o StrictHostKeyChecking=no root@localhost true && pg_isready
 
 CMD ["./run.sh"]
