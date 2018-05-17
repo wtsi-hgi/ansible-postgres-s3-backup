@@ -20,7 +20,4 @@ EXPOSE 22
 
 ADD tests/docker/run-target.sh /run.sh
 
-HEALTHCHECK --start-period=7.5s \
-    CMD sshpass -p root ssh -o StrictHostKeyChecking=no root@localhost true && pg_isready
-
 CMD ["./run.sh"]
