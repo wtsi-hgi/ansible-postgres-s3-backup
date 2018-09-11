@@ -35,7 +35,7 @@ sudo -u "${POSTGRES_USER}" pg_dumpall \
 # Delete old backups
 backupsToDelete="$(getBackupInformation | jq -r '.delete[]' | tr '\n' ' ' )"
 for backupToDelete in ${backupsToDelete}; do
-    toDelete="${BACKUP_LOCATION}${backupToDelete}"
+    toDelete="${BACKUP_LOCATION}/${backupToDelete}"
     >&2 echo "Deleting old backup: ${toDelete}"
     "${MC}" -C "${MC_CONFIG}" rm "${toDelete}"
 done
